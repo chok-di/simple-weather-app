@@ -57,7 +57,7 @@ const Home = ({historicalWeatherData}) => {
       <p>Hello</p>
       {historicalWeatherData[0].date}
       <CurrentWeather/>  
-      <HistoricalWeather/> 
+      <HistoricalWeather data = {historicalWeatherData}/> 
     </main>
   )
 }

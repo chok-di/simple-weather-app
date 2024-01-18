@@ -1,19 +1,20 @@
 import React from 'react';
 
-import getHistoricalWeather from "../helpers/weather/getHistoricalWeather";
-
-
-
-
-
-
-const HistoricalWeather: React.FC<HistoricalWeatherProps> = ({historicalWeatherData}) => {
+const HistoricalWeather = (props) => {
+  const data = props.data;
   console.log("hello");
-  console.log(historicalWeatherData);
+  console.log(data);
+  const past5days = data.map(day => 
+    <>
+     <p>{day.date}</p>
+     <p>{day.weathercode}</p>
+     <p>{day.maxTemperature}</p>
+     <p>{day.minTemperature}</p>
+    </>)
   return(
     <div>
       hello
-      {/* {historicalWeatherData[0].date} */}
+      {past5days}
     </div>
   )
 }
