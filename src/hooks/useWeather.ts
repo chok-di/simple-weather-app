@@ -2,8 +2,8 @@ import { fetchWeatherApi } from 'openmeteo';
 
 const useWeather = async () => {
   const params = {
-    "latitude": 52.52,
-    "longitude": 13.41,
+    "latitude": 43.65,
+    "longitude": -79.34,
     "current": ["temperature_2m", "weather_code"]
   };
 
@@ -21,15 +21,12 @@ const useWeather = async () => {
 
   const current = response.current()!;
 
-  const weatherData = {
-    
+  const weatherData = { 
       time: new Date((Number(current.time()) + utcOffsetSeconds) * 1000),
       temperature2m: current.variables(0)!.value(),
       weatherCode: current.variables(1)!.value(),
-    
-  
   };
-  console.log(weatherData); 
+
   return weatherData;
 }
 
