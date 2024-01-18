@@ -7,6 +7,8 @@ import { getTimeStamp } from "../helpers/index.js";
 
 import getHistoricalWeather from "@/helpers/weather/getHistoricalWeather";
 
+import SavedWeather from "./SavedWeather";
+
 const CurrentWeather = () => {
 
   interface WeatherData {
@@ -25,6 +27,8 @@ const CurrentWeather = () => {
 
   const [timeStamp, setTimeStamp] = useState<string>(getTimeStamp());
   const [play, setPlay] = useState<boolean>(true);
+  const [displayPast, setDisplayPast] = useState<boolean>(false);
+  const [pastData,setPastData] = useState<WeatherData[]>([]);
 
   useEffect(() => {
 
@@ -57,6 +61,31 @@ const CurrentWeather = () => {
   const lastMeasured = weather.time ? weather.time.toLocaleString() : "";
 
 
+  const saveWeatherData = () => {
+    const savedData = JSON.parse(localStorage.getItem('savedWeatherData')) || [];
+    savedData.push(weather);
+
+    if (savedData.length > 5){
+      savedData.shift();
+    }
+
+    localStorage.setItem('savedWeatherData', JSON.stringify(savedData));
+  }
+
+  
+
+  const loadSavedWeatherData = () => {
+    setDisplayPast(!displayPast);
+    const savedData = JSON.parse(localStorage.getItem('savedWeatherData')) || [];
+    setPastData(savedData);
+  }
+
+  const clearSavedWeatherData = () => {
+    localStorage.removeItem('savedWeatherData');
+    setPastData([]);
+
+  }
+
 
   return (
     <>
@@ -65,6 +94,13 @@ const CurrentWeather = () => {
       <p>{weather.weatherCode}</p>
       <p>{timeStamp}</p>
       <button onClick={() => setPlay(!play)}>{play ? "Pause" : "Play"}</button>
+      <button onClick = {saveWeatherData}>Store</button>
+      <button onClick = {loadSavedWeatherData}>Past Stored</button>
+      <button onClick = {clearSavedWeatherData}>Clear Saved</button>
+      {displayPast && 
+       <SavedWeather savedData={pastData}/>}
+     
+
     </>
   )
 
