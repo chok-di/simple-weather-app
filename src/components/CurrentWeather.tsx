@@ -47,7 +47,7 @@ const CurrentWeather = () => {
 
     if (play) {
       fetchWeather();
-      interval = setInterval(fetchWeather, 1000);
+      interval = setInterval(fetchWeather, 60000);
     }
 
     return () => {
@@ -63,7 +63,7 @@ const CurrentWeather = () => {
 
   const saveWeatherData = () => {
     const savedData = JSON.parse(localStorage.getItem('savedWeatherData')) || [];
-    savedData.push(weather);
+    savedData.push({...weather,savedAt:new Date().toLocaleString()});
 
     if (savedData.length > 5){
       savedData.shift();
@@ -88,20 +88,24 @@ const CurrentWeather = () => {
 
 
   return (
-    <>
-      <p>{weather.temperature2m}</p>
-      <p>{lastMeasured}</p>
-      <p>{weather.weatherCode}</p>
-      <p>{timeStamp}</p>
-      <button onClick={() => setPlay(!play)}>{play ? "Pause" : "Play"}</button>
-      <button onClick = {saveWeatherData}>Store</button>
-      <button onClick = {loadSavedWeatherData}>Past Stored</button>
-      <button onClick = {clearSavedWeatherData}>Clear Saved</button>
+    <div className="space-y-2">
+      <p className="text-lg md:text-3xl font-bold text-blue-600">{Math.round(weather.temperature2m)}°C</p>
+      <p className="font-mono text-sm">{weather.weatherCode}</p>
+      <p className="font-mono text-sm">Last Measured At:{lastMeasured}</p>
+      <p className="font-mono text-sm">Last Requested Made At:{timeStamp}</p>
+      <div className="flex flex-wrap gap-2">
+        <button className="bg-gray-700 text-white px-4 py-2 rounded"
+         onClick={() => setPlay(!play)}>{play ? "Pause" : "Play"}
+        </button>
+      </div>
+    
+      <button className="bg-green-500 text-white px-4 py-2 rounded" 
+        onClick = {saveWeatherData}>Store</button>
+      <button className="bg-blue-500 text-white px-4 py-2 rounded"onClick = {loadSavedWeatherData}>Past Stored</button>
+      <button className="bg-red-500 text-white px-4 py-2 rounded"onClick = {clearSavedWeatherData}>Clear Saved</button>
       {displayPast && 
        <SavedWeather savedData={pastData}/>}
-     
-
-    </>
+    </div>
   )
 
 }
