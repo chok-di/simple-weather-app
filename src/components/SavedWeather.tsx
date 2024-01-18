@@ -2,12 +2,20 @@ import React from "react";
 
 const SavedWeather = (props) => {
 
-  console.log(props);
   const savedData = props.savedData;
-  console.log(savedData);
+  const savedWeather = savedData.map(data => 
+    <div className="p-2 bg-gray-100 border border-gray-300 mb-2">
+      <div className="font-mono text-sm text-gray-700">Saved At: {data.savedAt}</div>
+      <div className="font-mono text-sm text-gray-700">Measured At:{data.time}</div>
+      <div className="font-mono text-sm text-gray-700">Temperature:{data.temperature2m}</div>
+      <div className="font-mono text-sm text-gray-700">{data.weatherCode}</div>
+  
+    </div>)
 
   return (
-    <p>saved weather here</p>
+    <div className="mt-4 p-4 bg-white border border-grey-400">
+    {savedWeather}
+    </div>
   )
  
 }
