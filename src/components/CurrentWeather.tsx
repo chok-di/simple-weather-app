@@ -60,30 +60,45 @@ const CurrentWeather = () => {
 
   const lastMeasured = weather.time ? weather.time.toLocaleString() : "";
 
-
-  const saveWeatherData = () => {
-    const savedData = JSON.parse(localStorage.getItem('savedWeatherData')) || [];
-    savedData.push({...weather,savedAt:new Date().toLocaleString()});
-
-    if (savedData.length > 5){
-      savedData.shift();
-    }
-
-    localStorage.setItem('savedWeatherData', JSON.stringify(savedData));
-  }
-
   
-
-  const loadSavedWeatherData = () => {
-    setDisplayPast(!displayPast);
-    const savedData = JSON.parse(localStorage.getItem('savedWeatherData')) || [];
-    setPastData(savedData);
+  const saveWeatherData = async() => {
+    try{
+      const response = await fetch('/api/weather',{
+        method: 'POST',
+        body:JSON.stringify({...weather,savedAt: new Date().toLocaleString()})
+      });
+      const data = response.json();
+      console.log("Successfully Saved Data", data);
+      return(data);
+    } catch(err){
+      console.error('Error', err);
+    }
   }
 
-  const clearSavedWeatherData = () => {
-    localStorage.removeItem('savedWeatherData');
-    setPastData([]);
+  const loadSavedWeatherData = async() => {
+    try{
+      const response = await fetch('/api/weather');
+      const data = response.json();
+      console.log('Successfully Loaded Latest Saved Data:', data);
+      return (data);
+    } catch(err){
+      console.error('Error:',err);
+    }
+  
+  }
 
+  const clearSavedWeatherData = async() => {
+    try{
+      const response = await fetch('/api/weather',{
+        method:'DELETE'
+      });
+      const data = response.json();
+      console.log('Successfully Deleted Saved Weather Data:', data);
+      setPastData([]);
+
+    } catch(err) {
+      console.error('Error:',err);
+    }
   }
 
 
@@ -111,3 +126,23 @@ const CurrentWeather = () => {
 }
 
 export default CurrentWeather;
+
+
+
+  // const saveWeatherData = () => {
+  //   const savedData = JSON.parse(localStorage.getItem('savedWeatherData')) || [];
+  //   savedData.push({...weather,savedAt:new Date().toLocaleString()});
+
+  //   if (savedData.length > 5){
+  //     savedData.shift();
+  //   }
+
+  //   localStorage.setItem('savedWeatherData', JSON.stringify(savedData));
+  // }
+
+
+    // const loadSavedWeatherData = () => {
+  //   setDisplayPast(!displayPast);
+  //   const savedData = JSON.parse(localStorage.getItem('savedWeatherData')) || [];
+  //   setPastData(savedData);
+  // }
