@@ -65,6 +65,9 @@ const CurrentWeather = () => {
     try{
       const response = await fetch('/api/weather',{
         method: 'POST',
+        headers:{
+          'Content-Type':'application/json',
+        },
         body:JSON.stringify({...weather,savedAt: new Date().toLocaleString()})
       });
       const data = response.json();
