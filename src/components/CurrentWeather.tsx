@@ -10,21 +10,20 @@ import { getTimeStamp } from "../helpers/index.js";
 
 
 
-import {CurrentWeatherData} from "../types";
+import {CurrentWeatherData, SavedWeatherData} from "../types";
 
-const CurrentWeather = () => {
+const CurrentWeather: React.FC = () => {
 
 
   const [weather, setWeather] = useState<CurrentWeatherData>({
     'time': null,
     'temperature2m': null,
     'weatherCode': null
-  })
-
+  });
   const [timeStamp, setTimeStamp] = useState<string>(getTimeStamp());
   const [play, setPlay] = useState<boolean>(true);
   const [displayPast, setDisplayPast] = useState<boolean>(false);
-  const [pastData,setPastData] = useState<CurrentWeatherData[]>([]);
+  const [pastData,setPastData] = useState<SavedWeatherData[]>([]);
 
   useEffect(() => {
 
@@ -45,10 +44,13 @@ const CurrentWeather = () => {
 
   }, [play]);
 
-  const handleClickPastStored = async() => {
+  const handleStoreClick = () => {
+    saveWeatherData(weather);
+  }
+
+  const handleLoadStoredClick = async() => {
     try{
       const savedWeatherData = await loadSavedWeatherData();
-      console.log(savedWeatherData);
       setPastData(savedWeatherData.data);
       setDisplayPast(true);
     } catch(err){
@@ -56,15 +58,13 @@ const CurrentWeather = () => {
     }
   }
 
-  
 
   const lastMeasured = weather.time ? weather.time.toLocaleString() : "";
 
 
-
   return (
     <div className="space-y-2">
-      <p className="text-lg md:text-3xl font-bold text-blue-600">{Math.round(weather.temperature2m)}°C</p>
+      <p className="text-lg md:text-3xl font-bold text-blue-600">{weather.temperature2m ? Math.round(weather.temperature2m) : `N/A`}°C</p>
       <p className="font-mono text-sm">{weather.weatherCode}</p>
       <p className="font-mono text-sm">Last Measured At:{lastMeasured}</p>
       <p className="font-mono text-sm">Last Requested Made At:{timeStamp}</p>
@@ -75,8 +75,8 @@ const CurrentWeather = () => {
       </div>
     
       <button className="bg-green-500 text-white px-4 py-2 rounded" 
-        onClick = {()=>{saveWeatherData(weather)}}>Store</button>
-      <button className="bg-blue-500 text-white px-4 py-2 rounded"onClick = {handleClickPastStored}>Past Stored</button>
+        onClick = {handleStoreClick}>Store</button>
+      <button className="bg-blue-500 text-white px-4 py-2 rounded"onClick = {handleLoadStoredClick}>Past Stored</button>
       <button className="bg-red-500 text-white px-4 py-2 rounded"onClick = {clearSavedWeatherData}>Clear Saved</button>
        {displayPast && <SavedWeather savedData={pastData}/>}
        

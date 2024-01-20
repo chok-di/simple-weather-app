@@ -1,10 +1,11 @@
 import React from 'react';
 
-const HistoricalWeather = ({data}) => {
+import {HistoricalDaily} from "../types"
+
+const HistoricalWeather : React.FC<{data: HistoricalDaily[]}> = ({data}) => {
+
 
   const colors = ['bg-red-400','bg-green-400','bg-blue-400','bg-yellow-400','bg-purple-400']
-
-  console.log(data);
 
   const past5days = data.map((day,index) => 
     <div key={index} className={`p-3 mb-2 ${colors[index % colors.length]} border border-gray-400`}>

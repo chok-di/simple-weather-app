@@ -20,7 +20,6 @@ export const getServerSideProps: GetServerSideProps = async() =>{
 
 
 const Home: React.FC<{ historicalWeatherData: HistoricalDaily[]}> = ({ historicalWeatherData }) => {
-
   return (
     <main className="flex justify-center bg-gray-200 p-3 md:p-5 min-h-screen">
       <div className="w-full max-w-4xl p-5">
