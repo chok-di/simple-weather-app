@@ -2,47 +2,24 @@ import React from 'react'
 
 import CurrentWeather from "../src/components/CurrentWeather";
 import HistoricalWeather from "../src/components/HistoricalWeather";
+
 import getHistoricalWeather from "../src/helpers/weather/getHistoricalWeather";
 
+import {GetServerSideProps} from 'next';
+import {HistoricalDaily} from "../src/types";
 
-interface HistoricalDaily {
-  date: string;
-  maxTemperature: number;
-  minTemperature: number;
-  weatherCode: number;
-}
-
-interface HistoricalWeatherProps {
-  historicalWeatherData: HistoricalDaily[];
-}
-
-interface WeatherApiResponse {
-  temperature2mMax: Float32Array;
-  temperature2mMin: Float32Array;
-  weatherCode: Float32Array;
-  time: Date[];
-}
-
-
-export async function getServerSideProps(): Promise<{ props: HistoricalWeatherProps }> {
-  const response: WeatherApiResponse = await getHistoricalWeather();
-  let historicalWeatherData: HistoricalDaily[] = [];
-  for (let i = 0; i < 5; i++) {
-    let dailyWeather: HistoricalDaily = { date: "", maxTemperature: 0, minTemperature: 0, weatherCode: 0 }
-    dailyWeather.maxTemperature = response.temperature2mMax[i];
-    dailyWeather.minTemperature = response.temperature2mMin[i];
-    dailyWeather.weatherCode = response.weatherCode[i];
-    dailyWeather.date = response.time[i].toLocaleDateString();
-    historicalWeatherData.push(dailyWeather);
-
+export const getServerSideProps: GetServerSideProps = async() =>{
+  try{
+    const historicalWeatherData: HistoricalDaily[] = await getHistoricalWeather();
+    return { props: { historicalWeatherData } };
+  } catch(err) {
+    console.error("SSR Failed: Can't retrieve past 5 days weather", err);
+    return { props: { historicalWeatherData: [] } };
   }
-  console.log(historicalWeatherData);
-  return { props: { historicalWeatherData } };
-
 }
 
 
-const Home = ({ historicalWeatherData }) => {
+const Home: React.FC<{ historicalWeatherData: HistoricalDaily[]}> = ({ historicalWeatherData }) => {
 
   return (
     <main className="flex justify-center bg-gray-200 p-3 md:p-5 min-h-screen">

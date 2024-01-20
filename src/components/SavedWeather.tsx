@@ -1,6 +1,7 @@
 import React from "react";
 
 const SavedWeather = (props) => {
+  console.log(props);
 
   const savedData = props.savedData;
   const savedWeather = savedData.map(data => 

@@ -1,108 +1,65 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import SavedWeather from "./SavedWeather";
 
 import useWeather from "../hooks/useWeather"
+import {saveWeatherData, loadSavedWeatherData, clearSavedWeatherData} from "../helpers/weather/handleWeatherDb";
+
 import { getTimeStamp } from "../helpers/index.js";
 
-import getHistoricalWeather from "@/helpers/weather/getHistoricalWeather";
 
-import SavedWeather from "./SavedWeather";
+
+import {CurrentWeatherData} from "../types";
 
 const CurrentWeather = () => {
 
-  interface WeatherData {
-    time: Date | null;
-    temperature2m: number | null;
-    weatherCode: number | null;
-  }
 
-
-  const [weather, setWeather] = useState<WeatherData>({
+  const [weather, setWeather] = useState<CurrentWeatherData>({
     'time': null,
     'temperature2m': null,
     'weatherCode': null
-
   })
 
   const [timeStamp, setTimeStamp] = useState<string>(getTimeStamp());
   const [play, setPlay] = useState<boolean>(true);
   const [displayPast, setDisplayPast] = useState<boolean>(false);
-  const [pastData,setPastData] = useState<WeatherData[]>([]);
+  const [pastData,setPastData] = useState<CurrentWeatherData[]>([]);
 
   useEffect(() => {
 
-    getHistoricalWeather();
-    let interval;
-
     const fetchWeather = async () => {
+      if(!play) return;
       try {
         const latestWeather = await useWeather();
         setWeather(latestWeather);
         setTimeStamp(getTimeStamp());
-      } catch (error) {
-        console.log(error);
+      } catch (err) {
+        console.log("Failed to fetch current weather information", err);
       }
     }
 
-    if (play) {
-      fetchWeather();
-      interval = setInterval(fetchWeather, 60000);
-    }
-
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
+    fetchWeather();
+    const interval = play ? setInterval(fetchWeather, 1000) : null;
+    return () => {if(interval) clearInterval(interval)}
 
   }, [play]);
 
+  const handleClickPastStored = async() => {
+    try{
+      const savedWeatherData = await loadSavedWeatherData();
+      console.log(savedWeatherData);
+      setPastData(savedWeatherData.data);
+      setDisplayPast(true);
+    } catch(err){
+      console.error('API call failed. Failed to load saved weather data', err);
+    }
+  }
+
+  
+
   const lastMeasured = weather.time ? weather.time.toLocaleString() : "";
 
-  
-  const saveWeatherData = async() => {
-    try{
-      const response = await fetch('/api/weather',{
-        method: 'POST',
-        headers:{
-          'Content-Type':'application/json',
-        },
-        body:JSON.stringify({...weather,savedAt: new Date().toLocaleString()})
-      });
-      const data = response.json();
-      console.log("Successfully Saved Data", data);
-      return(data);
-    } catch(err){
-      console.error('Error', err);
-    }
-  }
-
-  const loadSavedWeatherData = async() => {
-    try{
-      const response = await fetch('/api/weather');
-      const data = response.json();
-      console.log('Successfully Loaded Latest Saved Data:', data);
-      return (data);
-    } catch(err){
-      console.error('Error:',err);
-    }
-  
-  }
-
-  const clearSavedWeatherData = async() => {
-    try{
-      const response = await fetch('/api/weather',{
-        method:'DELETE'
-      });
-      const data = response.json();
-      console.log('Successfully Deleted Saved Weather Data:', data);
-      setPastData([]);
-
-    } catch(err) {
-      console.error('Error:',err);
-    }
-  }
 
 
   return (
@@ -118,11 +75,11 @@ const CurrentWeather = () => {
       </div>
     
       <button className="bg-green-500 text-white px-4 py-2 rounded" 
-        onClick = {saveWeatherData}>Store</button>
-      <button className="bg-blue-500 text-white px-4 py-2 rounded"onClick = {loadSavedWeatherData}>Past Stored</button>
+        onClick = {()=>{saveWeatherData(weather)}}>Store</button>
+      <button className="bg-blue-500 text-white px-4 py-2 rounded"onClick = {handleClickPastStored}>Past Stored</button>
       <button className="bg-red-500 text-white px-4 py-2 rounded"onClick = {clearSavedWeatherData}>Clear Saved</button>
-      {displayPast && 
-       <SavedWeather savedData={pastData}/>}
+       {displayPast && <SavedWeather savedData={pastData}/>}
+       
     </div>
   )
 
@@ -131,7 +88,7 @@ const CurrentWeather = () => {
 export default CurrentWeather;
 
 
-
+  // Below is legacy code for saving data with localStorage
   // const saveWeatherData = () => {
   //   const savedData = JSON.parse(localStorage.getItem('savedWeatherData')) || [];
   //   savedData.push({...weather,savedAt:new Date().toLocaleString()});
