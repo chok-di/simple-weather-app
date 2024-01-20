@@ -58,6 +58,15 @@ const CurrentWeather: React.FC = () => {
     }
   }
 
+  const handleClearSavedClick = async() => {
+    try{
+      await clearSavedWeatherData();
+      setPastData([]);
+    } catch (err){
+      console.error('API call failed. Failed to clear saved weather data', err);
+    }
+  }
+
 
   const lastMeasured = weather.time ? weather.time.toLocaleString() : "";
 
@@ -77,7 +86,7 @@ const CurrentWeather: React.FC = () => {
       <button className="bg-green-500 text-white px-4 py-2 rounded" 
         onClick = {handleStoreClick}>Store</button>
       <button className="bg-blue-500 text-white px-4 py-2 rounded"onClick = {handleLoadStoredClick}>Past Stored</button>
-      <button className="bg-red-500 text-white px-4 py-2 rounded"onClick = {clearSavedWeatherData}>Clear Saved</button>
+      <button className="bg-red-500 text-white px-4 py-2 rounded"onClick = {handleClearSavedClick}>Clear Saved</button>
        {displayPast && <SavedWeather savedData={pastData}/>}
        
     </div>
