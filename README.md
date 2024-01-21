@@ -69,7 +69,7 @@ Before you begin, ensure you have the following installed:
    ```bash
    brew services start mongodb-community
    ```
-5.**Start the development server**
+5. **Start the development server**
 
    ```bash
    npm run dev
