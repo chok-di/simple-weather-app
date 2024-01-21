@@ -41,6 +41,7 @@ Before you begin, ensure you have the following installed:
    ```bash
    git clone https://github.com/your_username/Your-Project-Name.git
    cd Your-Project-Name
+   ```
 
 2. **Install dependencies**
 
@@ -48,12 +49,14 @@ Before you begin, ensure you have the following installed:
 
    ```bash
    npm install
+   ```
 3. **Set up environment **variables**
 
   Create a .env.local file in the root directory of the project to store your environment variables, like your MongoDB URI. You can use .env.example as a reference.
   ```bash
   # .env.local
   MONGO_URI=your_mongodb_uri
+  ```
   Replace your_mongodb_uri with the actual URI of your MongoDB database.
 
 4. **Start your local MongoDB Instance**
@@ -61,9 +64,15 @@ Before you begin, ensure you have the following installed:
   ```bash
   sudo mkdir -p /data/db
   sudo chown `id -un` /data/db
+  ``````
   Then start MongoDB:
   ```bash
   mongod
+  ```
+  If you installed MongoDB using Homebrew, you can start MongoDB as a service:
+  ```bash
+  brew services start mongodb-community
+  ```
 
 
 
