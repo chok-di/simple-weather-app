@@ -46,7 +46,7 @@ Before you begin, ensure you have the following installed:
 
    Navigate to the project directory and install the required npm packages:
 
-   ``bash
+   ```bash
    npm install
 3. **Set up environment **variables**
 
@@ -55,6 +55,16 @@ Before you begin, ensure you have the following installed:
   # .env.local
   MONGO_URI=your_mongodb_uri
   Replace your_mongodb_uri with the actual URI of your MongoDB database.
+
+4. **Start your local MongoDB Instance**
+  Start MongoDB directly using the mongod command. First, ensure you have the default MongoDB data directory, which is /data/db. Create it with the correct permissions if it doesn't exist:
+  ```bash
+  sudo mkdir -p /data/db
+  sudo chown `id -un` /data/db
+  Then start MongoDB:
+  ```bash
+  mongod
+
 
 
 
