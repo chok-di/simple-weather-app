@@ -1,6 +1,7 @@
 // make api call to open-meteo to retrieve weather information for the past 5 days. Then process the data to form an Array of Objects. Each objects contain weather information for one day.
 
 import { fetchWeatherApi } from 'openmeteo';
+import getWeatherCondition from './getWeatherCondition';
 import {HistoricalDaily} from '../../types';
 
 
@@ -8,8 +9,8 @@ import {HistoricalDaily} from '../../types';
 
 const getHistoricalWeather = async (): Promise<HistoricalDaily[]> => {
   const params = {
-    "latitude": 52.52,
-    "longitude": 13.41,
+    "latitude": 43.65,
+    "longitude": -79.34,
     "daily": ["weather_code", "temperature_2m_max", "temperature_2m_min"],
     "past_days": 5,
     "forecast_days": 0
@@ -47,9 +48,9 @@ const getHistoricalWeather = async (): Promise<HistoricalDaily[]> => {
 
   const historicalWeatherData = weatherData.time.slice(0,5).map((time,i) => ({
     date:time.toLocaleDateString(),
-    maxTemperature: weatherData.temperature2mMax[i],
-    minTemperature: weatherData.temperature2mMin[i],
-    weatherCode: weatherData.weatherCode[i],
+    maxTemperature: Math.round(weatherData.temperature2mMax[i]),
+    minTemperature: Math.round(weatherData.temperature2mMin[i]),
+    weatherCondition: getWeatherCondition(weatherData.weatherCode[i]),
   }));
 
   return historicalWeatherData

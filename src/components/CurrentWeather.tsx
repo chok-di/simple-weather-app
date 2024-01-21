@@ -3,10 +3,8 @@
 import React, { useState, useEffect } from "react";
 import SavedWeather from "./SavedWeather";
 
-import useWeather from "../hooks/useWeather"
+import getCurrentWeather from "../helpers/weather/getCurrentWeather"
 import {saveWeatherData, loadSavedWeatherData, clearSavedWeatherData} from "../helpers/weather/handleWeatherDb";
-
-import { getTimeStamp } from "../helpers/index.js";
 
 import {CurrentWeatherData, SavedWeatherData} from "../types";
 
@@ -16,9 +14,9 @@ const CurrentWeather: React.FC = () => {
   const [weather, setWeather] = useState<CurrentWeatherData>({
     'time': null,
     'temperature2m': null,
-    'weatherCode': null
+    'weatherCondition': null
   });
-  const [timeStamp, setTimeStamp] = useState<string>(getTimeStamp());
+  const [timeStamp, setTimeStamp] = useState<string>(new Date().toLocaleString());
   const [play, setPlay] = useState<boolean>(true);
   const [displayPast, setDisplayPast] = useState<boolean>(false);
   const [pastData,setPastData] = useState<SavedWeatherData[]>([]);
@@ -28,16 +26,16 @@ const CurrentWeather: React.FC = () => {
     const fetchWeather = async () => {
       if(!play) return;
       try {
-        const latestWeather = await useWeather();
+        const latestWeather = await getCurrentWeather();
         setWeather(latestWeather);
-        setTimeStamp(getTimeStamp());
+        setTimeStamp(new Date().toLocaleString());
       } catch (err) {
         console.error("API call to openmeteo failed. Failed to fetch current weather information", err);
       }
     }
 
     fetchWeather();
-    const interval = play ? setInterval(fetchWeather, 1000) : null;
+    const interval = play ? setInterval(fetchWeather, 60000) : null;
     return () => {if(interval) clearInterval(interval)}
 
   }, [play]);
@@ -75,15 +73,13 @@ const CurrentWeather: React.FC = () => {
   }
 
 
-  const lastMeasured = weather.time ? weather.time.toLocaleString() : "";
-
 
   return (
     <div className="space-y-2">
-      <p className="text-lg md:text-3xl font-bold text-blue-600">{weather.temperature2m ? Math.round(weather.temperature2m) : `N/A`}°C</p>
-      <p className="font-mono text-sm">{weather.weatherCode}</p>
-      <p className="font-mono text-sm">Last Measured At:{lastMeasured}</p>
-      <p className="font-mono text-sm">Last Requested Made At:{timeStamp}</p>
+      <p className="text-2xl md:text-4xl font-bold text-blue-600">{weather.temperature2m}°C</p>
+      <p className="font-mono text-sm md:text-base">{weather.weatherCondition}</p>
+      <p className="font-mono text-sm md:text-base">Last Measured At:{weather.time}</p>
+      <p className="font-mono text-sm md:text-base">Last Request Made At:{timeStamp}</p>
       <div className="flex flex-wrap gap-2">
         <button className="bg-gray-700 text-white px-4 py-2 rounded"
          onClick={() => setPlay(!play)}>{play ? "Pause" : "Play"}
@@ -102,6 +98,15 @@ const CurrentWeather: React.FC = () => {
 }
 
 export default CurrentWeather;
+
+
+
+
+
+
+
+
+
 
 
   // Below is legacy code for saving data with localStorage

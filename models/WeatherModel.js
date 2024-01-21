@@ -2,9 +2,9 @@ import mongoose from 'mongoose';
 
 const weatherSchema = new mongoose.Schema({
   savedAt:String,
-  temperature2m: Number,
-  weatherCode:Number,
-  time:Date,
+  temperature2m:Number,
+  weatherCondition:String,
+  time:String,
 })
 
 //a Post-Save Hook to delete the oldest saved data when the total number of data entry exceeds 5. 
