@@ -35,8 +35,8 @@ Before you begin, ensure you have the following installed:
    Use Git to clone the project's repository to your local machine:
 
    ```bash
-   git clone https://github.com/your_username/Your-Project-Name.git
-   cd Your-Project-Name
+   git clone git@github.com:chok-di/simple-weather-app.git Your-Folder-Name
+   cd Your-Folder-Name
    ```
 
 2. **Install dependencies**
@@ -73,7 +73,7 @@ Before you begin, ensure you have the following installed:
 
    ```bash
    npm run dev
-   ``
+   ```
 
 
 
