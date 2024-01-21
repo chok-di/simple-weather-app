@@ -1,19 +1,15 @@
-#Very Simple Brutalist Weather App
+# Very Simple Brutalist Weather App
 
 ## Introduction
-This Next.js Weather App is a modern, responsive application that provides real-time weather information. It features current weather updates, historical weather data, and an option to save and load weather data. 
-
-Built with Next.js and styled with Tailwind CSS, this app offers a user-friendly interface with a brutalist design approach.
-
-The weather data is retrieved from Openmeteo api https://open-meteo.com/. By default, this app shows the weather data of Toronto,Ontario Canada. User can change the location by modifying the longitude and altitude in the helpers functions at src/helpers/weather.
+This Next.js Weather App provides real-time weather information in a responsive format. It features current weather updates, historical data, and options to save and retrieve weather conditions. The app, built using Next.js and Tailwind CSS, showcases a brutalist design and pulls data from Openmeteo (https://open-meteo.com/). By default, it displays weather for Toronto, Ontario, Canada, but users can easily change the location by adjusting longitude and latitude in the src/helpers/weather file.
 
 
 ## Features
-- **Current Weather**: Displays the latest weather information, including the temperature, weather condition, and the time when the weather was last measured.
-- **Timely Update** The current weather data is refreshed every 60s to ensure the provision of the most up-to-date information 
-- **Historical Weather Data**: Shows weather data from the past 5 days.
-- **Saved Weather Conditions**: Allows users to save weather conditions to a local database and view saved weather conditions.
-- **Responsive Design**: Fully responsive and accessible on various devices.
+- **Current Weather**: Shows the latest weather details, including temperature, condition, and last update time.
+- **Timely Update** Refreshes current weather data every 60 seconds.
+- **Historical Weather Data**: Access weather data from the past five days.
+- **Saved Weather Conditions**: Users can save weather data to a local database and view these records.
+- **Responsive Design**: Ensures compatibility across various devices.
 
 
 ## Technologies Used
@@ -50,29 +46,34 @@ Before you begin, ensure you have the following installed:
    ```bash
    npm install
    ```
-3. **Set up environment **variables**
+3. **Set up environment variables**
 
-  Create a .env.local file in the root directory of the project to store your environment variables, like your MongoDB URI. You can use .env.example as a reference.
-  ```bash
-  # .env.local
-  MONGO_URI=your_mongodb_uri
-  ```
-  Replace your_mongodb_uri with the actual URI of your MongoDB database.
+   Create a .env.local file in the root directory of the project to store your environment variables, like your MongoDB URI. You can use .env.example as a reference.
+   ```bash
+   # .env.local
+   MONGO_URI=your_mongodb_uri
+   ```
+   Replace your_mongodb_uri with the actual URI of your MongoDB database.
 
 4. **Start your local MongoDB Instance**
-  Start MongoDB directly using the mongod command. First, ensure you have the default MongoDB data directory, which is /data/db. Create it with the correct permissions if it doesn't exist:
-  ```bash
-  sudo mkdir -p /data/db
-  sudo chown `id -un` /data/db
-  ``````
-  Then start MongoDB:
-  ```bash
-  mongod
-  ```
-  If you installed MongoDB using Homebrew, you can start MongoDB as a service:
-  ```bash
-  brew services start mongodb-community
-  ```
+   Start MongoDB directly using the mongod command. First, ensure you have the default MongoDB data directory, which is /data/db. Create it with the correct permissions if it doesn't exist:
+   ```bash
+   sudo mkdir -p /data/db
+   sudo chown `id -un` /data/db
+   ``````
+   Then start MongoDB:
+   ```bash
+   mongod
+   ```
+   If you installed MongoDB using Homebrew, you can start MongoDB as a service:
+   ```bash
+   brew services start mongodb-community
+   ```
+5.**Start the development server**
+
+   ```bash
+   npm run dev
+   ``
 
 
 
