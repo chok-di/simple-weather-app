@@ -8,8 +8,6 @@ import {saveWeatherData, loadSavedWeatherData, clearSavedWeatherData} from "../h
 
 import { getTimeStamp } from "../helpers/index.js";
 
-
-
 import {CurrentWeatherData, SavedWeatherData} from "../types";
 
 const CurrentWeather: React.FC = () => {
@@ -34,7 +32,7 @@ const CurrentWeather: React.FC = () => {
         setWeather(latestWeather);
         setTimeStamp(getTimeStamp());
       } catch (err) {
-        console.log("Failed to fetch current weather information", err);
+        console.error("API call to openmeteo failed. Failed to fetch current weather information", err);
       }
     }
 
@@ -44,8 +42,17 @@ const CurrentWeather: React.FC = () => {
 
   }, [play]);
 
-  const handleStoreClick = () => {
-    saveWeatherData(weather);
+  const handleStoreClick = async() => {
+    try{
+      const newSavedData = await saveWeatherData(weather);
+      const allSavedWeatherData = [...pastData,newSavedData.data];
+      if (allSavedWeatherData.length > 5){
+        allSavedWeatherData.shift();
+      }
+      setPastData(allSavedWeatherData);
+    } catch(err){
+      console.error('API call failed. Failed to save current weather data', err);
+    }
   }
 
   const handleLoadStoredClick = async() => {

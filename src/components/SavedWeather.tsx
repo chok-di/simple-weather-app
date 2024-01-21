@@ -4,6 +4,8 @@ import {SavedWeatherData} from "../types";
 
 
 const SavedWeather :React.FC<{savedData: SavedWeatherData[]}>= ({savedData}) => {
+  console.log("savedDatabelow");
+  console.log(savedData);
 
   const savedWeather = savedData.map(data => 
     <div className="p-2 bg-gray-100 border border-gray-300 mb-2">
