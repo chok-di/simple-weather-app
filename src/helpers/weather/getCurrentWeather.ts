@@ -1,6 +1,8 @@
 import { fetchWeatherApi } from 'openmeteo';
 
-const useWeather = async () => {
+import getWeatherCondition from './getWeatherCondition';
+
+const getCurrentWeather = async () => {
   const params = {
     "latitude": 43.65,
     "longitude": -79.34,
@@ -14,20 +16,15 @@ const useWeather = async () => {
   const response = responses[0];
 
   const utcOffsetSeconds = response.utcOffsetSeconds();
-  const timezone = response.timezone();
-  const timezoneAbbreviation = response.timezoneAbbreviation();
-  const latitude = response.latitude();
-  const longitude = response.longitude();
-
   const current = response.current()!;
 
   const weatherData = { 
-      time: new Date((Number(current.time()) + utcOffsetSeconds) * 1000),
-      temperature2m: current.variables(0)!.value(),
-      weatherCode: current.variables(1)!.value(),
+      time: new Date((Number(current.time()) + utcOffsetSeconds) * 1000).toLocaleString(),
+      temperature2m: Math.round(current.variables(0)!.value()),
+      weatherCondition: getWeatherCondition(current.variables(1)!.value()),
   };
 
   return weatherData;
 }
 
-export default useWeather;
+export default getCurrentWeather;

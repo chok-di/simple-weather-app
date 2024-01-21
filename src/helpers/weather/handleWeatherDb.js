@@ -36,8 +36,6 @@ export const clearSavedWeatherData = async() => {
     });
     const data = response.json();
     console.log('Successfully Deleted Saved Weather Data:', data);
-    setPastData([]);
-
   } catch(err) {
     console.error('Error:',err);
   }
